@@ -15,17 +15,35 @@ const livros = [
     }
 ]
 
-app.get("/", (req, resp) => {
-    resp.status(200).send("Estou usando Express no Node.js")
+function buscaLivro(id) {
+    return livros.findIndex(livro => {
+        return livro.id === Number(id)
+    })
+}
+
+app.get("/", (req, res) => {
+    res.status(200).send("Estou usando Express no Node.js")
 })
 
-app.get("/livros", (req, resp) => {
-    resp.status(200).json(livros)
+app.get("/livros", (req, res) => {
+    res.status(200).json(livros)
 })
 
-app.post("/livros", (req, resp) => {
+app.get("/livros/:id", (req, res) => {
+    const index = buscaLivro(req.params.id)
+    res.status(200).json(livros[index])
+
+})
+
+app.post("/livros", (req, res) => {
     livros.push(req.body)
-    resp.status(201).send("livro cadastrado com sucesso")
+    res.status(201).send("livro cadastrado com sucesso")
+})
+
+app.put("/livros/:id", (req, res) => {
+    const index = buscaLivro(req.params.id)
+    livros[index].titulo = req.body.titulo
+    res.status(200).json(livros)
 })
 
 export default app
